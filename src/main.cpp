@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 
+using namespace std;
+
 void exercicio1();
 void exercicio2();
 void exercicio3();
@@ -161,29 +163,29 @@ void exercicio3()
 	ifstream inFile;
 
 	//Ler o ficheiro nos.txt
-	inFile.open("nos.txt");
+	inFile.open("nodes.txt");
 
 	if (!inFile) {
-	    cerr << "Unable to open file datafile.txt";
+	    cerr << "Unable to open nodes.txt";
 	    exit(1);   // call system to stop
 	}
 
-	std::string   line;
+	string line;
 
 	int idNo=0;
 	int X=0;
 	int Y=0;
 
-	while(std::getline(inFile, line))
+	while(getline(inFile, line))
 	{
-	    std::stringstream linestream(line);
-	    std::string         data;
+	    stringstream linestream(line);
+	    string data;
 
 	    linestream >> idNo;
 
-	    std::getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+	    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 	    linestream >> X;
-	    std::getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+	    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 	    linestream >> Y;
 	    gv->addNode(idNo,X,Y);
 
@@ -193,10 +195,10 @@ void exercicio3()
 
 
 	//Ler o ficheiro arestas.txt
-	inFile.open("arestas.txt");
+	inFile.open("roads.txt");
 
 		if (!inFile) {
-		    cerr << "Unable to open file datafile.txt";
+		    cerr << "Unable to open roads.txt";
 		    exit(1);   // call system to stop
 		}
 
@@ -204,17 +206,17 @@ void exercicio3()
 		int idNoOrigem=0;
 		int idNoDestino=0;
 
-		while(std::getline(inFile, line))
+		while(getline(inFile, line))
 		{
-		    std::stringstream linestream(line);
-		    std::string data;
+		    stringstream linestream(line);
+		    string data;
 
 
 		    linestream >> idAresta;
 
-		    std::getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		    linestream >> idNoOrigem;
-		    std::getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		    linestream >> idNoDestino;
 		    gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::UNDIRECTED);
 
