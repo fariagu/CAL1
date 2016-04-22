@@ -5,10 +5,14 @@
 
 using namespace std;
 
+const int NR_OF_SIGHTS = 5;
+
 class Tourist {
 	int id;
-	vector<int> sights;
+	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
+	static vector<Tourist *> tourists;
 public:
+	Tourist();
 	Tourist(int id);
 	Tourist(int id, vector<int>s);
 
@@ -16,10 +20,13 @@ public:
 	void setId(int id);
 	vector<int> getSights();
 	void setSights(vector<int>s);
-	bool pushSight(int sightId);
+	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
+	void readSights();
 
 };
+
+Tourist::Tourist(){}
 
 Tourist::Tourist(int id){
 	this->id = id;
@@ -70,6 +77,42 @@ bool Tourist::removeSight(int sightId){
 	}
 
 	return false;						//<- sight wasn't part of vector
+}
+
+void Tourist::readSights(){
+	ifstream inFile;
+
+	//Ler o ficheiro tourists.txt
+	inFile.open("tourists.txt");
+
+	if (!inFile) {
+		cerr << "Unable to open tourists.txt";
+		exit(1);   // call system to stop
+	}
+
+	string line;
+
+	int id, sight;
+	vector<int> v;
+
+	while(getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+		linestream >> id;
+
+		for(int i = 0; i < NR_OF_SIGHTS; i++){
+			getline(linestream, data, ' ');
+			linestream >> sight;
+			v.push_back(sight);
+		}
+
+		tourists.push_back(&Tourist(id, v));
+
+	}
+
+	inFile.close();
 }
 
 #endif /* TOURIST_H_ */

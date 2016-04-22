@@ -24,7 +24,6 @@ public:
 	bool removeTourist(int touristId);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
-
 };
 
 Bus::Bus(int id){
