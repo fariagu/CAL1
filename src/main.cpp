@@ -3,6 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "vertex.h"
+#include "edge.h"
+#include "graph.h"
 
 using namespace std;
 
@@ -153,7 +156,7 @@ void exercicio2()
 
 void exercicio3()
 {
-	GraphViewer *gv = new GraphViewer(600, 600, false);
+	GraphViewer *gv = new GraphViewer(800, 600, false);
 
 	gv->createWindow(600, 600);
 
@@ -195,16 +198,17 @@ void exercicio3()
 
 
 	//Ler o ficheiro arestas.txt
-	inFile.open("roads.txt");
+	inFile.open("edges.txt");
 
 		if (!inFile) {
-		    cerr << "Unable to open roads.txt";
+		    cerr << "Unable to open edges.txt";
 		    exit(1);   // call system to stop
 		}
 
 		int idAresta=0;
 		int idNoOrigem=0;
 		int idNoDestino=0;
+		int directed=0;
 
 		while(getline(inFile, line))
 		{
@@ -218,7 +222,17 @@ void exercicio3()
 		    linestream >> idNoOrigem;
 		    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
 		    linestream >> idNoDestino;
-		    gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::UNDIRECTED);
+		    getline(linestream, data, ';');
+		    linestream >> directed;
+
+		    if (directed == 0){
+		    	gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::UNDIRECTED);
+		    }
+		    else {
+		    	gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::DIRECTED);
+		    }
+
+
 
 		}
 

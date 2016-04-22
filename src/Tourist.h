@@ -17,7 +17,7 @@ public:
 	vector<int> getSights();
 	void setSights(vector<int>s);
 	bool pushSight(int sightId);
-	bool removeSight(int sightID);
+	bool removeSight(int sightId);
 
 };
 
