@@ -5,9 +5,11 @@
 
 using namespace std;
 
+const int BUS_CAPACITY = 10;
+
 class Bus {
 	int id;
-	static int capacity = 10;
+	static int capacity;
 	vector<int> tourists;
 	vector<int> sights;
 public:
@@ -25,6 +27,8 @@ public:
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
 };
+
+int Bus::capacity = BUS_CAPACITY;
 
 Bus::Bus(int id){
 	this->id = id;
@@ -63,12 +67,12 @@ bool Bus::pushTourist(int touristId){
 
 	for (int i = 0; i < this->tourists.size(); i++){
 		if (this->tourists[i] == touristId){
-			return false;				//<- didn't push sight, was already there
+			return false;				//<- didn't push tourist, was already there
 		}
 	}
 
 	this->tourists.push_back(touristId);
-	return true;						//<- pushed sight successfully
+	return true;						//<- pushed tourist successfully
 }
 
 bool Bus::removeTourist(int touristId){
@@ -78,11 +82,11 @@ bool Bus::removeTourist(int touristId){
 	for (; it != ite; it++){
 		if ((*it) == touristId){
 			this->tourists.erase(it);
-			return true;				//<- deleted sight successfully
+			return true;				//<- deleted tourist successfully
 		}
 	}
 
-	return false;						//<- sight wasn't part of vector
+	return false;						//<- tourist wasn't part of vector
 }
 
 bool Bus::pushSight(int sightId){

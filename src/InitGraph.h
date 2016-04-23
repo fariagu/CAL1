@@ -127,7 +127,7 @@ void InitGraph::readEdges(){
 			}
 		}
 
-		e.weight = sqrt((x1-x2)^2 + (y1-y2)^2);
+		e.weight = sqrt(pow(x1-x2, 2) + pow(y1-y2, 2));
 
 		edges.push_back(e);
 

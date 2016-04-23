@@ -6,6 +6,9 @@
 #include "vertex.h"
 #include "edge.h"
 #include "graph.h"
+#include "Tourist.h"
+#include "Bus.h"
+#include "InitGraph.h"
 
 using namespace std;
 
@@ -244,7 +247,29 @@ void exercicio3()
 int main() {
 	//exercicio1();
 	//exercicio2();
-	exercicio3();
+	//exercicio3();
+
+	Tourist t = Tourist();
+	t.readSights();
+	Bus b = Bus(0);
+
+	vector<int> t_id;
+
+	t_id.push_back(0);		//manually pushing tourists to a bus
+	t_id.push_back(1);
+
+	b.setTourists(t_id);
+
+	for (int i = 0; i < b.getTourists().size(); i++){
+		for (int j = 0; j < Tourist::tourists.size(); j++){
+			if (Tourist::tourists[i]->getId() == b.getTourists()[i]){
+				cout << Tourist::tourists[i]->getId() << "-> ";
+				Tourist::tourists[i]->printSights();
+				break;
+			}
+		}
+	}
+
 	getchar();
 	return 0;
 }

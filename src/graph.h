@@ -16,10 +16,10 @@ using namespace std;
 
 template <class T> class Edge;
 template <class T> class Vertex;
-
+/*
 const int NOT_VISITED = 0;
 const int BEING_VISITED = 1;
-const int DONE_VISITED = 2;
+const int DONE_VISITED = 2;*/
 const int INT_INFINITY = INT_MAX;
 
 template <class T>

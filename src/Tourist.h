@@ -10,8 +10,9 @@ const int NR_OF_SIGHTS = 5;
 class Tourist {
 	int id;
 	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
-	static vector<Tourist *> tourists;
 public:
+	static vector<Tourist* > tourists;
+
 	Tourist();
 	Tourist(int id);
 	Tourist(int id, vector<int>s);
@@ -23,8 +24,11 @@ public:
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
 	void readSights();
+	void printSights();
 
 };
+
+vector<Tourist*> Tourist::tourists;
 
 Tourist::Tourist(){}
 
@@ -101,18 +105,29 @@ void Tourist::readSights(){
 		string data;
 
 		linestream >> id;
+		v.clear();
 
 		for(int i = 0; i < NR_OF_SIGHTS; i++){
 			getline(linestream, data, ' ');
 			linestream >> sight;
 			v.push_back(sight);
 		}
-
-		tourists.push_back(&Tourist(id, v));
+		//cout << v[0] << " " << v[1] << " " << v[2] << " " << v[3] << " " << v[4] << " ---" << id<< endl;
+		tourists.push_back(new Tourist(id, v));
 
 	}
 
 	inFile.close();
+}
+
+void Tourist::printSights(){
+	for (int i = 0; i < this->sights.size(); i++){
+		cout << this->sights[i];
+		if (i != this->sights.size() -1){
+			cout << ",";
+		}
+	}
+	cout << ";" << endl;
 }
 
 #endif /* TOURIST_H_ */
