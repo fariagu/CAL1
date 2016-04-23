@@ -37,7 +37,14 @@ public:
 	bool operator<(const Vertex<T> vertex);
 
 	Vertex* path;
+
+	vector<Edge<T>  > getAdj();
 };
+
+template <class T>
+vector<Edge<T> > Vertex<T>::getAdj(){
+	return this->adj;
+}
 
 
 template <class T>

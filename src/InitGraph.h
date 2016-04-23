@@ -26,10 +26,12 @@ public:
 	InitGraph();
 	void readVertices();
 	void readEdges();
+	void displayGraph();
 };
 
 InitGraph::InitGraph(){
 	readVertices();
+
 	readEdges();
 
 	Graph<int> g = Graph<int>();
@@ -40,6 +42,7 @@ InitGraph::InitGraph(){
 	for (int i = 0; i < edges.size(); i++){
 		g.addEdge(edges[i].source, edges[i].destination, edges[i].weight);
 	}
+
 }
 
 void InitGraph::readVertices(){
@@ -135,6 +138,32 @@ void InitGraph::readEdges(){
 	}
 
 	inFile.close();
+}
+
+void InitGraph::displayGraph(){
+	GraphViewer *gv = new GraphViewer(600, 600, false);
+	gv->createWindow(600, 600);
+
+	Graph<int> g = Graph<int>();
+
+	gv->defineEdgeColor("blue");
+	gv->defineVertexColor("yellow");
+/*
+	for (int i = 0; i < g.getVertexSet().size(); i++){
+		gv->addNode(g.getVertexSet()[i]->getInfo(), this->vertices[i].x, this->vertices[i].y);
+	}
+*/
+	for (int i = 0; i < this->vertices.size(); i++){
+		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
+	}
+
+
+	for (int i = 0; i < this->edges.size(); i++){
+		gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
+		gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
+	}
+
+	gv->rearrange();
 }
 
 #endif /* MAP_H_ */

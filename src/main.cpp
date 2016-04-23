@@ -270,6 +270,9 @@ int main() {
 		}
 	}
 
+	InitGraph IG = InitGraph();
+	IG.displayGraph();
+
 	getchar();
 	return 0;
 }
