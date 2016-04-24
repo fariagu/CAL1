@@ -310,45 +310,88 @@ int main() {
 	g.displayGraph();
 
 
-	vector<int> finalPath;
-	vector<int> tmpPath;
+	vector<int> finalPath, tmpPath, tmpPartPath;
+	double finalWeight = INT_INFINITY, weight = 0, tmpWeight = INT_INFINITY;
 
 	for (int i = 0; i < b.getSights().size(); i++){
 		vector<int> remainingSights = b.getSights();
-		vector<int>::iterator it = remainingSights.begin();
-		vector<int>::iterator ite = remainingSights.end();
+		tmpPath.clear();
+		int nextId = b.getSights()[i], maybeNextId = -1;
 
-		for (int j = 0; j < remainingSights.size(); j++){
-			g.graph.dijkstraShortestPath(remainingSights[i]);
+		cout << endl << "starting on " << nextId << endl;			//debugging
 
-			double weight = INT_INFINITY, w;
+		//for (int j = 0; j < remainingSights.size(); j++){
+		while (nextId != -1){
+			cout << "nextId: " << nextId << endl;			//debugging
+			int prevId = nextId;
+			tmpWeight = INT_INFINITY;
+			//tmpPath.clear();
+			g.graph.dijkstraShortestPath(nextId);
+
+			double w;
 			vector<int> path;
 
 			for (int k = 0; k < remainingSights.size(); k++){
-				w = pathBetween(remainingSights[j], remainingSights[k], g.graph, path);
+				path.clear();
+				w = pathBetween(nextId, remainingSights[k], g.graph, path);
 
-				if (w != 0 && w < weight){
-					tmpPath = path;
-					weight = w;
+				cout << "pathBetween " << nextId << " and " << remainingSights[k] << "--> " << w << endl;		//debugging
+
+				if (w != 0 && w < tmpWeight){
+					tmpPartPath = path;
+					tmpWeight = w;
+					maybeNextId = remainingSights[k];
 
 					for (int xx = 0; xx < path.size(); xx++){		//debugging
 						cout << path[xx] << " ";
 					}
-					cout << " - weight: " << weight << endl;
+					cout << " - weight: " << tmpWeight << endl;		//end debugging
 				}
 			}
+			if (tmpWeight == INT_INFINITY){
+				tmpWeight = 0;
+				//tmpPartPath.push_back(nextId);
+				nextId = -1;		//maybe not necessary (when last sight is reached)
+			}
+			else {
+				nextId = maybeNextId;
+			}
 
-/*			for (int k = 0; k < remainingSights.size(); k++){// erase from vector
-				if ((*it) == remainingSights[i]){
+			vector<int>::iterator it = remainingSights.begin();
+			vector<int>::iterator ite = remainingSights.end();
+			for (; it != ite; it++){// erase from vector
+				if ((*it) == prevId){
 					remainingSights.erase(it);
-					it--;
 				}
 			}
-*/
 
+			if (remainingSights.size() != 1){
+				tmpPath.insert( tmpPath.end(), tmpPartPath.begin(), tmpPartPath.end() );//concatenates the two vectors
+			}
+			weight += tmpWeight;
 
 		}
+
+		for (int i = 0; i < tmpPath.size(); i++){
+			cout << tmpPath[i] << " - ";
+		}
+		cout << endl << "candidate weight: " << weight << endl;
+
+		if (weight < finalWeight){
+			//finalPath.clear();
+			finalPath = tmpPath;
+			finalWeight = weight;
+		}
+		weight = 0;
+		//tmpPath.clear();
 	}
+
+	cout << "Result:" << endl;
+
+	for (int i = 0; i < finalPath.size(); i++){
+		cout << finalPath[i] << " - ";
+	}
+	cout << endl << "final weight = " << finalWeight << endl;
 
 
 
