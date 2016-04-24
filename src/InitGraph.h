@@ -28,6 +28,7 @@ public:
 	void readVertices();
 	void readEdges();
 	void displayGraph();
+	void highlightRoute(vector<int> & p);
 	vector <Tourist> FillTourists();
 
 	Graph<int> graph;
@@ -180,6 +181,54 @@ void InitGraph::displayGraph(){
 
 	gv->rearrange();
 }
+
+void InitGraph::highlightRoute(vector<int> &path){
+	GraphViewer *gv = new GraphViewer(600, 600, false);
+	gv->createWindow(600, 600);
+
+	Graph<int> g = Graph<int>();
+
+	gv->defineEdgeColor("blue");
+	gv->defineVertexColor("yellow");
+	/*
+	for (int i = 0; i < g.getVertexSet().size(); i++){
+		gv->addNode(g.getVertexSet()[i]->getInfo(), this->vertices[i].x, this->vertices[i].y);
+	}
+	 */
+	for (int i = 0; i < this->vertices.size(); i++){
+		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
+	}
+
+
+	for (int i = 0; i < this->edges.size(); i++){
+		if (this->edges[i].twoWay){
+			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
+		}
+		else {
+			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::DIRECTED);
+		}
+
+		//gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
+	}
+
+	for (int i = 0; i < path.size(); i++){
+		gv->setVertexColor(path[i], "green");
+	}
+
+	for (int i = 0; i < path.size() - 1; i++){
+		for (int j = 0; j < this->edges.size(); j++){
+			if (this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1]){
+				gv->setEdgeColor(j, "red");
+				gv->setEdgeThickness(j, 2);
+			}
+		}
+	}
+
+	gv->rearrange();
+}
+
+
+
 //usa Tourist::readTourists();
 //acede com:
 /**
@@ -222,8 +271,8 @@ vector<Tourist> InitGraph::FillTourists() {
 
 	inFile.close();
 }
-*/
-
+ */
+/*
 ifstream inFile;
 vector<Tourist> tourists;
 vector<int> sights;
@@ -260,6 +309,6 @@ if (!inFile) {
 	}
 }
 return tourists;
-}
+}*/
 
 #endif /* MAP_H_ */

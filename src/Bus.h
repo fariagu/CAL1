@@ -27,7 +27,7 @@ public:
 	bool removeTourist(int touristId);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
-	void calcRoute();
+	void calcRoute(vector<int> & finalPath);
 };
 
 int Bus::capacity = BUS_CAPACITY;
@@ -117,7 +117,7 @@ bool Bus::removeSight(int sightId){
 	return false;						//<- sight wasn't part of vector
 }
 
-void Bus::calcRoute(){
+void Bus::calcRoute(vector<int> & finalPath){
 	//manually ------------------------------
 /*	vector<Tourist> tourists;
 	tourists= FillTourists();
@@ -131,16 +131,17 @@ void Bus::calcRoute(){
 	t_id.push_back(0);		//manually pushing tourists to a bus
 	t_id.push_back(1);
 
-	b.setTourists(t_id);
+	b.setTourists(t_id);*/
 	int arr[] = { 2, 5, 7, 9, 11, 16, 20 };
 	vector<int> s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
 
-	b.setSights(s);*/
+//	b.setSights(s);
+	this->setSights(s);
 
 	InitGraph g = InitGraph();
 	//g.displayGraph();
 
-	vector<int> finalPath, tmpPath, tmpPartPath;
+	vector<int> tmpPath, tmpPartPath;
 	double finalWeight = INT_INFINITY, weight = 0, tmpWeight = INT_INFINITY;
 
 	for (int i = 0; i < this->sights.size(); i++) {
@@ -217,12 +218,21 @@ void Bus::calcRoute(){
 		//tmpPath.clear();
 	}
 
+	cout << "....................\n";
+
+	for (int i = 0; i < finalPath.size()-1; i++){
+		if (finalPath[i] == finalPath[i+1]){
+			finalPath.erase(finalPath.begin() + i);
+		}
+	}
+
 	cout << "Result:" << endl;
 
 	for (int i = 0; i < finalPath.size(); i++) {
 		cout << finalPath[i] << " - ";
 	}
 	cout << endl << "final weight = " << finalWeight << endl;
+
 }
 
 

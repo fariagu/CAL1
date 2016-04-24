@@ -99,7 +99,13 @@ void exercicio3() {
 
 int main() {
 	InitGraph g = InitGraph();
-	g.displayGraph();
+	//g.displayGraph();
+
+	vector<int> path;
+
+	Bus b = Bus(0);
+	b.calcRoute(path);
+	g.highlightRoute(path);
 
 	getchar();
 	return 0;
