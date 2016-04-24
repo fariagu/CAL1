@@ -271,7 +271,7 @@ vector<Tourist> FillTourists() {
 		cerr << "Unable to open tourists.txt";
 		exit(1);   // call system to stop
 	} else {
-		Tourist t;
+		Tourist t = Tourist();
 		int sight1, sight2, sight3, sight4, sight5;
 
 		getline(inFile, String);
@@ -283,7 +283,11 @@ vector<Tourist> FillTourists() {
 			sight3 = atoi(String.substr(6, 1).c_str());
 			sight4 = atoi(String.substr(8, 1).c_str());
 			sight5 = atoi(String.substr(10, 1).c_str());
-			sights = {sight1, sight2, sight3, sight4, sight5};
+			sights.push_back(sight1);
+			sights.push_back(sight2);
+			sights.push_back(sight3);
+			sights.push_back(sight4);
+			sights.push_back(sight5);
 
 			t.setSights(sights);
 			tourists.push_back(t);
