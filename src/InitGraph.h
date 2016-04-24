@@ -28,7 +28,7 @@ public:
 	void readVertices();
 	void readEdges();
 	void displayGraph();
-	void highlightRoute(vector<int> & p);
+	void highlightRoute(vector<int> & p, vector<int> & sights);
 	vector <Tourist> FillTourists();
 
 	Graph<int> graph;
@@ -182,7 +182,7 @@ void InitGraph::displayGraph(){
 	gv->rearrange();
 }
 
-void InitGraph::highlightRoute(vector<int> &path){
+void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 	GraphViewer *gv = new GraphViewer(600, 600, false);
 	gv->createWindow(600, 600);
 
@@ -212,14 +212,22 @@ void InitGraph::highlightRoute(vector<int> &path){
 	}
 
 	for (int i = 0; i < path.size(); i++){
-		gv->setVertexColor(path[i], "green");
+		gv->setVertexColor(path[i], "red");
+	}
+
+	for (int i = 0; i < sights.size(); i++){
+		gv->setVertexColor(sights[i], "green");
 	}
 
 	for (int i = 0; i < path.size() - 1; i++){
 		for (int j = 0; j < this->edges.size(); j++){
-			if (this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1]){
+			cout << "edge[" << j << "] -> source: ";
+			cout << edges[j].source << " x " << path[i];
+			cout << ", dest: " << edges[j].destination << " x " << path[i+1] << endl;
+			if (this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1] ||
+					this->edges[j].destination == path[i] && this->edges[j].source == path[i + 1]){
 				gv->setEdgeColor(j, "red");
-				gv->setEdgeThickness(j, 2);
+				gv->setEdgeThickness(j, 3);
 			}
 		}
 	}

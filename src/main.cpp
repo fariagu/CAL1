@@ -104,8 +104,12 @@ int main() {
 	vector<int> path;
 
 	Bus b = Bus(0);
+
 	b.calcRoute(path);
-	g.highlightRoute(path);
+
+	vector<int> sights = b.getSights();
+
+	g.highlightRoute(path, sights);
 
 	getchar();
 	return 0;
