@@ -180,12 +180,19 @@ void InitGraph::displayGraph(){
 
 	gv->rearrange();
 }
-
+//usa Tourist::readTourists();
+//acede com:
+/**
+ * Tourist t = Tourist();
+ * t.readTourists();
+ * vector<Tourist> vt = t.tourists;
+ */
+/*
 vector<Tourist> InitGraph::FillTourists() {
 	ifstream inFile;
 
 	//Ler o ficheiro nodes.txt
-	inFile.open("nodes.txt");
+	inFile.open("tourists.txt");
 
 	if (!inFile) {
 		cerr << "Unable to open nodes.txt";
@@ -215,7 +222,7 @@ vector<Tourist> InitGraph::FillTourists() {
 
 	inFile.close();
 }
-
+*/
 
 ifstream inFile;
 vector<Tourist> tourists;
