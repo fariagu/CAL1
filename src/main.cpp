@@ -2,6 +2,8 @@
 #include "graphviewer.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <vector>
 #include <sstream>
 #include "vertex.h"
 #include "edge.h"
@@ -113,14 +115,14 @@ void exercicio2()
 		sleep(1);
 		if (first)
 		{
-		  gv->removeNode(12);
-		  gv->removeNode(13);
-		  first=false;
+			gv->removeNode(12);
+			gv->removeNode(13);
+			first=false;
 		}
 		else
 		{
-		  gv->removeNode(20);
-		  gv->removeNode(21);
+			gv->removeNode(20);
+			gv->removeNode(21);
 		}
 		gv->addNode(14,250,550);
 		gv->addNode(15,350,550);
@@ -172,8 +174,8 @@ void exercicio3()
 	inFile.open("nodes.txt");
 
 	if (!inFile) {
-	    cerr << "Unable to open nodes.txt";
-	    exit(1);   // call system to stop
+		cerr << "Unable to open nodes.txt";
+		exit(1);   // call system to stop
 	}
 
 	string line;
@@ -184,16 +186,16 @@ void exercicio3()
 
 	while(getline(inFile, line))
 	{
-	    stringstream linestream(line);
-	    string data;
+		stringstream linestream(line);
+		string data;
 
-	    linestream >> idNo;
+		linestream >> idNo;
 
-	    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-	    linestream >> X;
-	    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-	    linestream >> Y;
-	    gv->addNode(idNo,X,Y);
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> X;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> Y;
+		gv->addNode(idNo,X,Y);
 
 	}
 
@@ -203,45 +205,73 @@ void exercicio3()
 	//Ler o ficheiro arestas.txt
 	inFile.open("edges.txt");
 
-		if (!inFile) {
-		    cerr << "Unable to open edges.txt";
-		    exit(1);   // call system to stop
+	if (!inFile) {
+		cerr << "Unable to open edges.txt";
+		exit(1);   // call system to stop
+	}
+
+	int idAresta=0;
+	int idNoOrigem=0;
+	int idNoDestino=0;
+	int directed=0;
+
+	while(getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+
+		linestream >> idAresta;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoOrigem;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> idNoDestino;
+		getline(linestream, data, ';');
+		linestream >> directed;
+
+		if (directed == 0){
+			gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::UNDIRECTED);
+		}
+		else {
+			gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::DIRECTED);
 		}
 
-		int idAresta=0;
-		int idNoOrigem=0;
-		int idNoDestino=0;
-		int directed=0;
-
-		while(getline(inFile, line))
-		{
-		    stringstream linestream(line);
-		    string data;
 
 
-		    linestream >> idAresta;
+	}
 
-		    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		    linestream >> idNoOrigem;
-		    getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		    linestream >> idNoDestino;
-		    getline(linestream, data, ';');
-		    linestream >> directed;
-
-		    if (directed == 0){
-		    	gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::UNDIRECTED);
-		    }
-		    else {
-		    	gv->addEdge(idAresta,idNoOrigem,idNoDestino, EdgeType::DIRECTED);
-		    }
-
-
-
-		}
-
-		inFile.close();
+	inFile.close();
 
 	gv->rearrange();
+}
+
+
+/**
+ * fills p with complete path from source to dest and returns the full weight
+ */
+double pathBetween(int source, int dest, Graph<int> g, vector<int> & p){
+	vector<Vertex<int>* > vs = g.getVertexSet();
+	double totalWeight = 0, i = dest;
+
+	p.push_back(vs[i]->getInfo());
+
+	while (i != source){
+		p.push_back(vs[i]->path->getInfo());
+
+		for (int j = 0; j < vs[i]->path->getAdj().size(); j++){
+			if (vs[i]->path->getAdj()[j].getDest()->getInfo() == vs[i]->getInfo()){
+				totalWeight += vs[i]->path->getAdj()[j].getWeight();
+				break;
+			}
+		}
+		dest = vs[i]->getInfo();
+		i = vs[i]->path->getInfo();
+	}
+
+	reverse(p.begin(), p.end());
+
+	return totalWeight;
 }
 
 int main() {
@@ -259,7 +289,12 @@ int main() {
 	t_id.push_back(1);
 
 	b.setTourists(t_id);
+	int arr[] =  {2, 5, 7, 9, 11, 16, 20};
+	vector<int> s (arr, arr + sizeof(arr) / sizeof(arr[0]) );	//manualy pushing sights
 
+
+	b.setSights(s);
+	/*
 	for (int i = 0; i < b.getTourists().size(); i++){
 		for (int j = 0; j < Tourist::tourists.size(); j++){
 			if (Tourist::tourists[i]->getId() == b.getTourists()[i]){
@@ -269,9 +304,68 @@ int main() {
 			}
 		}
 	}
+	 */
 
-	InitGraph IG = InitGraph();
-	IG.displayGraph();
+	InitGraph g = InitGraph();
+	g.displayGraph();
+
+
+	vector<int> finalPath;
+	vector<int> tmpPath;
+
+	for (int i = 0; i < b.getSights().size(); i++){
+		vector<int> remainingSights = b.getSights();
+		vector<int>::iterator it = remainingSights.begin();
+		vector<int>::iterator ite = remainingSights.end();
+
+		for (int j = 0; j < remainingSights.size(); j++){
+			g.graph.dijkstraShortestPath(remainingSights[i]);
+
+			double weight = INT_INFINITY, w;
+			vector<int> path;
+
+			for (int k = 0; k < remainingSights.size(); k++){
+				w = pathBetween(remainingSights[j], remainingSights[k], g.graph, path);
+
+				if (w != 0 && w < weight){
+					tmpPath = path;
+					weight = w;
+
+					for (int xx = 0; xx < path.size(); xx++){		//debugging
+						cout << path[xx] << " ";
+					}
+					cout << " - weight: " << weight << endl;
+				}
+			}
+
+/*			for (int k = 0; k < remainingSights.size(); k++){// erase from vector
+				if ((*it) == remainingSights[i]){
+					remainingSights.erase(it);
+					it--;
+				}
+			}
+*/
+
+
+		}
+	}
+
+
+
+	/*	g.graph.dijkstraShortestPath(12);
+	vector<int> vec;
+
+	double w = pathBetween(12, 12, g.graph, vec);
+
+	cout << w << endl;
+
+	for (int i = 0; i < vec.size(); i++){
+		cout << vec[i] << " ";
+	}
+	cout << endl;
+	 */
+
+
 
 	getchar();
 	return 0;

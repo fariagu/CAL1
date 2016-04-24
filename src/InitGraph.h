@@ -22,11 +22,14 @@ struct s_e {
 class InitGraph {
 	vector<s_v> vertices;
 	vector<s_e> edges;
+
 public:
 	InitGraph();
 	void readVertices();
 	void readEdges();
 	void displayGraph();
+
+	Graph<int> graph;
 };
 
 InitGraph::InitGraph(){
@@ -34,13 +37,17 @@ InitGraph::InitGraph(){
 
 	readEdges();
 
-	Graph<int> g = Graph<int>();
+	this->graph = Graph<int>();
 
 	for (int i = 0; i < vertices.size(); i++){
-		g.addVertex(vertices[i].id);
+		graph.addVertex(i);
 	}
+
 	for (int i = 0; i < edges.size(); i++){
-		g.addEdge(edges[i].source, edges[i].destination, edges[i].weight);
+		if (edges[i].twoWay){
+			graph.addEdge(edges[i].destination, edges[i].source, edges[i].weight);
+		}
+		graph.addEdge(edges[i].source, edges[i].destination, edges[i].weight);
 	}
 
 }
@@ -94,6 +101,7 @@ void InitGraph::readEdges(){
 	string line;
 
 	struct s_e e;
+	int tmp;
 	int tw = 0;
 
 	while(getline(inFile, line))
