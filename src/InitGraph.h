@@ -157,19 +157,25 @@ void InitGraph::displayGraph(){
 
 	gv->defineEdgeColor("blue");
 	gv->defineVertexColor("yellow");
-/*
+	/*
 	for (int i = 0; i < g.getVertexSet().size(); i++){
 		gv->addNode(g.getVertexSet()[i]->getInfo(), this->vertices[i].x, this->vertices[i].y);
 	}
-*/
+	 */
 	for (int i = 0; i < this->vertices.size(); i++){
 		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
 	}
 
 
 	for (int i = 0; i < this->edges.size(); i++){
-		gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
-		gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
+		if (this->edges[i].twoWay){
+			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
+		}
+		else {
+			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::DIRECTED);
+		}
+
+		//gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
 	}
 
 	gv->rearrange();
@@ -177,41 +183,76 @@ void InitGraph::displayGraph(){
 
 vector<Tourist> InitGraph::FillTourists() {
 	ifstream inFile;
-	vector<Tourist> tourists;
-	vector<int> sights;
-	string String;
 
-	//Ler o ficheiro tourists.txt
-	inFile.open("tourists.txt");
+	//Ler o ficheiro nodes.txt
+	inFile.open("nodes.txt");
 
 	if (!inFile) {
-		cerr << "Unable to open tourists.txt";
+		cerr << "Unable to open nodes.txt";
 		exit(1);   // call system to stop
-	} else {
-		Tourist t = Tourist();
-		int sight1, sight2, sight3, sight4, sight5;
-
-		getline(inFile, String);
-		while (inFile) {
-			//int pos = String.find_last_of(";");
-			t.setId(atoi(String.substr(0, 1).c_str()));
-			sight1 = atoi(String.substr(2, 1).c_str());
-			sight2 = atoi(String.substr(4, 1).c_str());
-			sight3 = atoi(String.substr(6, 1).c_str());
-			sight4 = atoi(String.substr(8, 1).c_str());
-			sight5 = atoi(String.substr(10, 1).c_str());
-			sights.push_back(sight1);
-			sights.push_back(sight2);
-			sights.push_back(sight3);
-			sights.push_back(sight4);
-			sights.push_back(sight5);
-
-			t.setSights(sights);
-			tourists.push_back(t);
-			getline(inFile, String);
-		}
 	}
-	return tourists;
+
+	string line;
+
+	struct s_v v;
+
+	while(getline(inFile, line))
+	{
+		stringstream linestream(line);
+		string data;
+
+		linestream >> v.id;
+
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> v.x;
+		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
+		linestream >> v.y;
+
+		vertices.push_back(v);
+
+
+	}
+
+	inFile.close();
+}
+
+
+ifstream inFile;
+vector<Tourist> tourists;
+vector<int> sights;
+string String;
+
+//Ler o ficheiro tourists.txt
+inFile.open("tourists.txt");
+
+if (!inFile) {
+	cerr << "Unable to open tourists.txt";
+	exit(1);   // call system to stop
+} else {
+	Tourist t = Tourist();
+	int sight1, sight2, sight3, sight4, sight5;
+
+	getline(inFile, String);
+	while (inFile) {
+		//int pos = String.find_last_of(";");
+		t.setId(atoi(String.substr(0, 1).c_str()));
+		sight1 = atoi(String.substr(2, 1).c_str());
+		sight2 = atoi(String.substr(4, 1).c_str());
+		sight3 = atoi(String.substr(6, 1).c_str());
+		sight4 = atoi(String.substr(8, 1).c_str());
+		sight5 = atoi(String.substr(10, 1).c_str());
+		sights.push_back(sight1);
+		sights.push_back(sight2);
+		sights.push_back(sight3);
+		sights.push_back(sight4);
+		sights.push_back(sight5);
+
+		t.setSights(sights);
+		tourists.push_back(t);
+		getline(inFile, String);
+	}
+}
+return tourists;
 }
 
 #endif /* MAP_H_ */

@@ -98,7 +98,8 @@ void exercicio3() {
 
 
 int main() {
-
+	InitGraph g = InitGraph();
+	g.displayGraph();
 
 	getchar();
 	return 0;

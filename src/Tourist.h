@@ -23,7 +23,7 @@ public:
 	void setSights(vector<int>s);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
-	void readSights();
+	void readTourists();
 	void printSights();
 
 };
@@ -83,7 +83,7 @@ bool Tourist::removeSight(int sightId){
 	return false;						//<- sight wasn't part of vector
 }
 
-void Tourist::readSights(){
+void Tourist::readTourists(){
 	ifstream inFile;
 
 	//Ler o ficheiro tourists.txt
