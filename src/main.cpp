@@ -257,7 +257,7 @@ double pathBetween(int source, int dest, Graph<int> g, vector<int> & p) {
 
 	return totalWeight;
 }
-
+/*
 vector<Tourist> FillTourists() {
 	ifstream inFile;
 	vector<Tourist> tourists;
@@ -296,14 +296,12 @@ vector<Tourist> FillTourists() {
 	}
 	return tourists;
 }
+*/
 
 int main() {
 	//exercicio1();
 	//exercicio2();
 	//exercicio3();
-
-	vector<Tourist> tourists;
-	tourists= FillTourists();
 
 	Tourist t = Tourist();
 	t.readSights();
