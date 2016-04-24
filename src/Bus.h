@@ -2,6 +2,7 @@
 #define BUS_H_
 
 #include <vector>
+#include "InitGraph.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ public:
 	bool removeTourist(int touristId);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
+	void calcRoute();
 };
 
 int Bus::capacity = BUS_CAPACITY;
@@ -113,6 +115,114 @@ bool Bus::removeSight(int sightId){
 	}
 
 	return false;						//<- sight wasn't part of vector
+}
+
+void Bus::calcRoute(){
+	//manually ------------------------------
+/*	vector<Tourist> tourists;
+	tourists= FillTourists();
+
+	Tourist t = Tourist();
+	t.readSights();
+	Bus b = Bus(0);
+
+	vector<int> t_id;
+
+	t_id.push_back(0);		//manually pushing tourists to a bus
+	t_id.push_back(1);
+
+	b.setTourists(t_id);
+	int arr[] = { 2, 5, 7, 9, 11, 16, 20 };
+	vector<int> s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
+
+	b.setSights(s);*/
+
+	InitGraph g = InitGraph();
+	//g.displayGraph();
+
+	vector<int> finalPath, tmpPath, tmpPartPath;
+	double finalWeight = INT_INFINITY, weight = 0, tmpWeight = INT_INFINITY;
+
+	for (int i = 0; i < this->sights.size(); i++) {
+		vector<int> remainingSights = this->sights;
+		tmpPath.clear();
+		int nextId = this->sights[i], maybeNextId = -1;
+
+		cout << endl << "starting on " << nextId << endl;			//debugging
+
+		//for (int j = 0; j < remainingSights.size(); j++){
+		while (nextId != -1) {
+			cout << "nextId: " << nextId << endl;			//debugging
+			int prevId = nextId;
+			tmpWeight = INT_INFINITY;
+			//tmpPath.clear();
+			g.graph.dijkstraShortestPath(nextId);
+
+			double w;
+			vector<int> path;
+
+			for (int k = 0; k < remainingSights.size(); k++) {
+				path.clear();
+				w = g.graph.pathBetween(nextId, remainingSights[k], path);
+
+				cout << "pathBetween " << nextId << " and "
+						<< remainingSights[k] << "--> " << w << endl;//debugging
+
+				if (w != 0 && w < tmpWeight) {
+					tmpPartPath = path;
+					tmpWeight = w;
+					maybeNextId = remainingSights[k];
+
+					for (int xx = 0; xx < path.size(); xx++) {		//debugging
+						cout << path[xx] << " ";
+					}
+					cout << " - weight: " << tmpWeight << endl;	//end debugging
+				}
+			}
+			if (tmpWeight == INT_INFINITY) {
+				tmpWeight = 0;
+				//tmpPartPath.push_back(nextId);
+				nextId = -1;//maybe not necessary (when last sight is reached)
+			} else {
+				nextId = maybeNextId;
+			}
+
+			vector<int>::iterator it = remainingSights.begin();
+			vector<int>::iterator ite = remainingSights.end();
+			for (; it != ite; it++) {		// erase from vector
+				if ((*it) == prevId) {
+					remainingSights.erase(it);
+				}
+			}
+
+			if (remainingSights.size() != 1) {
+				tmpPath.insert(tmpPath.end(), tmpPartPath.begin(),
+						tmpPartPath.end());		//concatenates the two vectors
+			}
+			weight += tmpWeight;
+
+		}
+
+		for (int i = 0; i < tmpPath.size(); i++) {
+			cout << tmpPath[i] << " - ";
+		}
+		cout << endl << "candidate weight: " << weight << endl;
+
+		if (weight < finalWeight) {
+			//finalPath.clear();
+			finalPath = tmpPath;
+			finalWeight = weight;
+		}
+		weight = 0;
+		//tmpPath.clear();
+	}
+
+	cout << "Result:" << endl;
+
+	for (int i = 0; i < finalPath.size(); i++) {
+		cout << finalPath[i] << " - ";
+	}
+	cout << endl << "final weight = " << finalWeight << endl;
 }
 
 

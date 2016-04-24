@@ -61,7 +61,39 @@ public:
 	int edgeCost(int vOrigIndex, int vDestIndex);
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest);
 	void getfloydWarshallPathAux(int index1, int index2, vector<T> & res);
+
+
+	double pathBetween(const T & source, const T & dest, vector<T> & p);
 };
+
+/**
+ * fills p with complete path from source to dest and returns the full weight
+ */
+template <class T>
+double Graph<T>::pathBetween(const T & source, const T & dest, vector<T> & p) {
+	vector<Vertex<int>*> vs = this->vertexSet;
+	double totalWeight = 0, i = dest;
+
+	p.push_back(vs[i]->getInfo());
+
+	while (i != source) {
+		p.push_back(vs[i]->path->getInfo());
+
+		for (int j = 0; j < vs[i]->path->getAdj().size(); j++) {
+			if (vs[i]->path->getAdj()[j].getDest()->getInfo()
+					== vs[i]->getInfo()) {
+				totalWeight += vs[i]->path->getAdj()[j].getWeight();
+				break;
+			}
+		}
+		//dest = vs[i]->getInfo();
+		i = vs[i]->path->getInfo();
+	}
+
+	reverse(p.begin(), p.end());
+
+	return totalWeight;
+}
 
 
 template <class T>
