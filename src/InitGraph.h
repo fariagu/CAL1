@@ -211,9 +211,8 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 		//gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
 	}
 
-	for (int i = 0; i < path.size(); i++){
-		gv->setVertexColor(path[i], "red");
-	}
+	gv->setVertexLabel(path[0], "Start");
+	gv->setVertexLabel(path[path.size()-1], "Finish");
 
 	for (int i = 0; i < sights.size(); i++){
 		gv->setVertexColor(sights[i], "green");
@@ -221,9 +220,6 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 
 	for (int i = 0; i < path.size() - 1; i++){
 		for (int j = 0; j < this->edges.size(); j++){
-			cout << "edge[" << j << "] -> source: ";
-			cout << edges[j].source << " x " << path[i];
-			cout << ", dest: " << edges[j].destination << " x " << path[i+1] << endl;
 			if (this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1] ||
 					this->edges[j].destination == path[i] && this->edges[j].source == path[i + 1]){
 				gv->setEdgeColor(j, "red");

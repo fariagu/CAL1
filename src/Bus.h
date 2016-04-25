@@ -132,7 +132,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 	t_id.push_back(1);
 
 	b.setTourists(t_id);*/
-	int arr[] = { 2, 5, 7, 9, 11, 16, 20 };
+	int arr[] = { 2, 5, 7, 9, 11, 20, 18};
 	vector<int> s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
 
 //	b.setSights(s);
