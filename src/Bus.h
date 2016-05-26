@@ -19,13 +19,16 @@ public:
 
 	int getId();
 	void setId(int id);
+	bool FindSight(int s);
+	void adicionaSights(Bus b, Tourist t);
+	vector <Bus> FillBuses(vector <Tourist> tourists);
 	vector<int> getTourists();
 	void setTourists(vector<int>t);
 	vector<int> getSights();
 	void setSights(vector<int> s);
 	bool pushTourist(int touristId);
 	bool removeTourist(int touristId);
-	bool pushSight(int sightId);		//sightId is the vertexId
+	void pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
 	void calcRoute(vector<int> & finalPath);
 };
@@ -67,7 +70,7 @@ void Bus::setSights(vector<int> s){
 
 bool Bus::pushTourist(int touristId){
 
-	for (int i = 0; i < this->tourists.size(); i++){
+	for (unsigned int i = 0; i < this->tourists.size(); i++){
 		if (this->tourists[i] == touristId){
 			return false;				//<- didn't push tourist, was already there
 		}
@@ -91,16 +94,16 @@ bool Bus::removeTourist(int touristId){
 	return false;						//<- tourist wasn't part of vector
 }
 
-bool Bus::pushSight(int sightId){
+void Bus::pushSight(int sightId){
 
-	for (int i = 0; i < this->tourists.size(); i++){
+	for (unsigned int i = 0; i < this->tourists.size(); i++){
 		if (this->tourists[i] == sightId){
-			return false;				//<- didn't push sight, was already there
+			return;// false				//<- didn't push sight, was already there
 		}
 	}
 
 	this->tourists.push_back(sightId);
-	return true;						//<- pushed sight successfully
+	//return true;						//<- pushed sight successfully
 }
 
 bool Bus::removeSight(int sightId){
@@ -117,25 +120,136 @@ bool Bus::removeSight(int sightId){
 	return false;						//<- sight wasn't part of vector
 }
 
+
+bool Bus::FindSight(int s)
+{
+	for(size_t i = 0 ; this->getSights().size();i++)
+	{
+		if (this->getSights()[i] == s)
+			return true;
+	}
+
+	return false;
+
+}
+
+void Bus::adicionaSights(Bus b, Tourist t)
+{
+	for(size_t i = 0; i < b.getSights().size(); i++)
+	{
+
+		for(size_t k = 0; k < t.getSights().size(); k++)
+		{
+			if(b.getSights()[i] != t.getSights()[k])
+				this->sights.push_back(t.getSights()[k]);
+		}
+
+	}
+}
+
+
+vector <Bus> Bus::FillBuses(vector <Tourist> tourists){
+	vector <Bus> buses;
+	buses.clear();
+	//vector <int> t2;
+	vector <Tourist> aux = tourists;
+	int nbuses = 1;
+	//int size = 0;
+
+	while (aux.size() > 0){
+
+		//vector <Tourist> aux2 = aux;
+		Bus b = Bus(nbuses);
+		b.pushTourist(aux[0].getId());
+		//b.setSights(aux[0].getSights());
+		for (unsigned int i = 0; i < aux[0].getSights().size(); i++){
+			int s = (int)aux[0].getSights()[i];
+			b.pushSight(s);
+		}
+		//aux.erase(aux.begin());
+
+		for (unsigned int i = 1; i < aux.size(); i++){
+			if(aux[0].CommonSights(aux[i]) > 2 )
+			{
+				//size++;
+				//b.adicionaSights(b, aux[i]);
+				for (unsigned int j = 0; j < aux[0].getSights().size(); j++){
+					int s = (int)aux[i].getSights()[j];
+					b.pushSight(s);
+				}
+				b.pushTourist(aux[i].getId());
+				aux.erase(aux.begin() + i);
+				i--;
+			}
+		}
+
+		aux.erase(aux.begin());
+
+		buses.push_back(b);
+		nbuses++;
+	}
+
+	/*
+
+	while(aux.size() >  2)
+	{
+		vector <Tourist> aux2 = aux;
+		Bus b = Bus(nbuses);
+		b.pushTourist(aux2[0].getId());
+		b.setSights(aux2[0].getSights());
+		aux.erase(aux.begin());
+
+
+
+
+		while(i < aux.size() && size < 10){
+			//for(size_t i  =0 ; i < aux.size() ; i++)
+			//{
+			if(aux2[0].CommonSights(aux[i]) > 2 )
+			{
+				size++;
+				b.adicionaSights(b, aux[i]);
+				b.pushTourist(aux[i].getId());
+				aux.erase(aux.begin() + i);
+				i--;
+			}
+			i++;
+		}
+
+		buses.push_back(b);
+
+
+
+		nbuses++;
+	}
+
+	 */
+	return buses;
+}
+
 void Bus::calcRoute(vector<int> & finalPath){
 	//manually ------------------------------
-/*	vector<Tourist> tourists;
+	/*	vector<Tourist> tourists;
 	tourists= FillTourists();
-
 	Tourist t = Tourist();
 	t.readSights();
 	Bus b = Bus(0);
-
 	vector<int> t_id;
-
 	t_id.push_back(0);		//manually pushing tourists to a bus
 	t_id.push_back(1);
-
 	b.setTourists(t_id);*/
-	int arr[] = { 2, 5, 7, 9, 11, 20, 18};
-	vector<int> s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
+	//int arr[] = { 2, 5, 7, 9, 11, 20, 18};
+	Bus b = Bus(0);
+	Tourist t;
+	vector <Bus> v;
+	v = b.FillBuses(t.readTourists());
+	vector<int> s = v[0].getSights();
 
-//	b.setSights(s);
+	for(size_t i = 0 ; i < v[0].getSights().size(); i++)
+		cout << v[0].getSights()[i];
+	//s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
+
+	//	b.setSights(s);
 	this->setSights(s);
 
 	InitGraph g = InitGraph();

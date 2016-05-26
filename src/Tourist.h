@@ -2,7 +2,6 @@
 #define TOURIST_H_
 
 #include <vector>
-#include <string>
 
 using namespace std;
 
@@ -10,7 +9,6 @@ const int NR_OF_SIGHTS = 5;
 
 class Tourist {
 	int id;
-	string name;
 	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
 public:
 	static vector<Tourist* > tourists;
@@ -21,14 +19,14 @@ public:
 
 	int getId();
 	void setId(int id);
-	string getName();
-	void setName(const string& name);
 	vector<int> getSights();
 	void setSights(vector<int>s);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
-	void readTourists();
+	vector <Tourist> readTourists();
 	void printSights();
+	int CommonSights(Tourist &t2);
+
 };
 
 vector<Tourist*> Tourist::tourists;
@@ -50,14 +48,6 @@ int Tourist::getId(){
 
 void Tourist::setId(int id){
 	this->id = id;
-}
-
-string Tourist::getName(){
-	return this->name;
-}
-
-void Tourist::setName(const string& name) {
-	this->name = name;
 }
 
 vector<int> Tourist::getSights(){
@@ -94,7 +84,7 @@ bool Tourist::removeSight(int sightId){
 	return false;						//<- sight wasn't part of vector
 }
 
-void Tourist::readTourists(){
+vector <Tourist> Tourist::readTourists(){
 	ifstream inFile;
 
 	//Ler o ficheiro tourists.txt
@@ -108,15 +98,15 @@ void Tourist::readTourists(){
 	string line;
 
 	int id, sight;
-	string name;
 	vector<int> v;
+	vector <Tourist> tourists;
 
 	while(getline(inFile, line))
 	{
 		stringstream linestream(line);
 		string data;
 
-		linestream >> id >> name;
+		linestream >> id;
 		v.clear();
 
 		for(int i = 0; i < NR_OF_SIGHTS; i++){
@@ -124,12 +114,15 @@ void Tourist::readTourists(){
 			linestream >> sight;
 			v.push_back(sight);
 		}
+		Tourist t = Tourist(id,v);
 		//cout << v[0] << " " << v[1] << " " << v[2] << " " << v[3] << " " << v[4] << " ---" << id<< endl;
-		tourists.push_back(new Tourist(id, v));
+		tourists.push_back(t);
 
 	}
 
 	inFile.close();
+
+	return tourists;
 }
 
 void Tourist::printSights(){
@@ -140,6 +133,22 @@ void Tourist::printSights(){
 		}
 	}
 	cout << ";" << endl;
+}
+
+
+int Tourist::CommonSights(Tourist &t2){
+	int counter = 0;
+
+	for (int i = 0 ; i <5 ;i++)
+	{
+		for(int j = 0 ; j < 5 ; j++)
+		{
+		if(this->getSights()[i] == t2.getSights()[j])
+			counter++;
+		}
+	}
+
+	return counter;
 }
 
 #endif /* TOURIST_H_ */
