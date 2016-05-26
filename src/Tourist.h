@@ -2,6 +2,7 @@
 #define TOURIST_H_
 
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ const int NR_OF_SIGHTS = 5;
 
 class Tourist {
 	int id;
+	string name;
 	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
 public:
 	static vector<Tourist* > tourists;
@@ -19,13 +21,14 @@ public:
 
 	int getId();
 	void setId(int id);
+	string getName();
+	void setName(const string& name);
 	vector<int> getSights();
 	void setSights(vector<int>s);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
 	void readTourists();
 	void printSights();
-
 };
 
 vector<Tourist*> Tourist::tourists;
@@ -47,6 +50,14 @@ int Tourist::getId(){
 
 void Tourist::setId(int id){
 	this->id = id;
+}
+
+string Tourist::getName(){
+	return this->name;
+}
+
+void Tourist::setName(const string& name) {
+	this->name = name;
 }
 
 vector<int> Tourist::getSights(){
@@ -97,6 +108,7 @@ void Tourist::readTourists(){
 	string line;
 
 	int id, sight;
+	string name;
 	vector<int> v;
 
 	while(getline(inFile, line))
@@ -104,7 +116,7 @@ void Tourist::readTourists(){
 		stringstream linestream(line);
 		string data;
 
-		linestream >> id;
+		linestream >> id >> name;
 		v.clear();
 
 		for(int i = 0; i < NR_OF_SIGHTS; i++){

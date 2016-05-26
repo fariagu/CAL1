@@ -1,28 +1,56 @@
 0;50;50
+Aliados
 1;100;50
+Câmara do Porto
 2;150;50
+Trindade
 3;220;40
+Clérigos
 4;50;100
+Estação de São Bento
 5;100;100
+Sé do Porto
 6;150;100
+Ponte de D.Luis
 7;230;110
+Palácio de Cristal
 8;50;150
+Jardim de Serralves
 9;100;150
+Ribeira
 10;150;150
+Piolho
 11;270;150
+Reitoria da Universidade do Porto
 12;0;190
+Foz do Douro
 13;60;210
+Passeio das Virtudes
 14;180;200
+Tribunal
 15;255;225
+Livraria Lello
 16;170;270
+Galerias de Paris
 17;130;220
+Cedofeita
 18;0;30
+Palcio da Bolsa
 19;10;65
+Casa da Música
 20;20;350
+Coliseu
 21;80;270
+Teatro Sá da Bandeira
 22;90;360
+Rivoli
 23;160;350
+Jardim do Morro
 24;200;320
+Cais de Gaia
 25;290;290
+Serra do Pilar
 26;300;70
+Caves Vinho do Porto
 27;310;180
+Estação de Campanhã

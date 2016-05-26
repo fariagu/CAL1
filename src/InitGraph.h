@@ -4,11 +4,13 @@
 #include "graph.h"
 #include <vector>
 #include <cmath>
+#include <string>
 
 struct s_v {
 	int id;
 	int x;
 	int y;
+	string name;
 };
 
 struct s_e {
@@ -82,6 +84,9 @@ void InitGraph::readVertices(){
 		linestream >> v.y;
 
 		vertices.push_back(v);
+
+		getline(inFile, v.name);
+
 
 
 	}
@@ -165,8 +170,8 @@ void InitGraph::displayGraph(){
 	 */
 	for (int i = 0; i < this->vertices.size(); i++){
 		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
+		gv->setVertexLabel(this->vertices[i].id, this->vertices[i].name);
 	}
-
 
 	for (int i = 0; i < this->edges.size(); i++){
 		if (this->edges[i].twoWay){
@@ -197,6 +202,7 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 	 */
 	for (int i = 0; i < this->vertices.size(); i++){
 		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
+		gv->setVertexLabel(this->vertices[i].id, this->vertices[i].name);
 	}
 
 
@@ -211,8 +217,8 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 		//gv->setEdgeWeight(this->edges[i].id, this->edges[i].weight);
 	}
 
-	gv->setVertexLabel(path[0], "Start");
-	gv->setVertexLabel(path[path.size()-1], "Finish");
+	gv->setVertexLabel(path[0], this->vertices[path[0]].name + " - Start");
+	gv->setVertexLabel(path[path.size()-1], this->vertices[path[path.size()-1]].name + " - Finish");
 
 	for (int i = 0; i < sights.size(); i++){
 		gv->setVertexColor(sights[i], "green");
