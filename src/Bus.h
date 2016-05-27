@@ -6,7 +6,7 @@
 
 using namespace std;
 
-const int BUS_CAPACITY = 10;
+const int BUS_CAPACITY = 5;
 
 class Bus {
 	int id;
@@ -189,41 +189,7 @@ vector <Bus> Bus::FillBuses(vector <Tourist> tourists){
 		nbuses++;
 	}
 
-	/*
 
-	while(aux.size() >  2)
-	{
-		vector <Tourist> aux2 = aux;
-		Bus b = Bus(nbuses);
-		b.pushTourist(aux2[0].getId());
-		b.setSights(aux2[0].getSights());
-		aux.erase(aux.begin());
-
-
-
-
-		while(i < aux.size() && size < 10){
-			//for(size_t i  =0 ; i < aux.size() ; i++)
-			//{
-			if(aux2[0].CommonSights(aux[i]) > 2 )
-			{
-				size++;
-				b.adicionaSights(b, aux[i]);
-				b.pushTourist(aux[i].getId());
-				aux.erase(aux.begin() + i);
-				i--;
-			}
-			i++;
-		}
-
-		buses.push_back(b);
-
-
-
-		nbuses++;
-	}
-
-	 */
 	return buses;
 }
 
@@ -258,7 +224,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 	vector<int> tmpPath, tmpPartPath;
 	double finalWeight = INT_INFINITY, weight = 0, tmpWeight = INT_INFINITY;
 
-	for (int i = 0; i < this->sights.size(); i++) {
+	for (unsigned int i = 0; i < this->sights.size(); i++) {
 		vector<int> remainingSights = this->sights;
 		tmpPath.clear();
 		int nextId = this->sights[i], maybeNextId = -1;
@@ -276,7 +242,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 			double w;
 			vector<int> path;
 
-			for (int k = 0; k < remainingSights.size(); k++) {
+			for (unsigned int k = 0; k < remainingSights.size(); k++) {
 				path.clear();
 				w = g.graph.pathBetween(nextId, remainingSights[k], path);
 
@@ -288,7 +254,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 					tmpWeight = w;
 					maybeNextId = remainingSights[k];
 
-					for (int xx = 0; xx < path.size(); xx++) {		//debugging
+					for (unsigned int xx = 0; xx < path.size(); xx++) {		//debugging
 						cout << path[xx] << " ";
 					}
 					cout << " - weight: " << tmpWeight << endl;	//end debugging
@@ -318,7 +284,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 
 		}
 
-		for (int i = 0; i < tmpPath.size(); i++) {
+		for (unsigned int i = 0; i < tmpPath.size(); i++) {
 			cout << tmpPath[i] << " - ";
 		}
 		cout << endl << "candidate weight: " << weight << endl;
@@ -334,7 +300,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 
 	cout << "....................\n";
 
-	for (int i = 0; i < finalPath.size()-1; i++){
+	for (unsigned int i = 0; i < finalPath.size()-1; i++){
 		if (finalPath[i] == finalPath[i+1]){
 			finalPath.erase(finalPath.begin() + i);
 		}
@@ -342,7 +308,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 
 	cout << "Result:" << endl;
 
-	for (int i = 0; i < finalPath.size(); i++) {
+	for (unsigned int i = 0; i < finalPath.size(); i++) {
 		cout << finalPath[i] << " - ";
 	}
 	cout << endl << "final weight = " << finalWeight << endl;

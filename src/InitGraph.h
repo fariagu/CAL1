@@ -43,11 +43,11 @@ InitGraph::InitGraph(){
 
 	this->graph = Graph<int>();
 
-	for (int i = 0; i < vertices.size(); i++){
+	for (unsigned int i = 0; i < vertices.size(); i++){
 		graph.addVertex(i);
 	}
 
-	for (int i = 0; i < edges.size(); i++){
+	for (unsigned int i = 0; i < edges.size(); i++){
 		if (edges[i].twoWay){
 			graph.addEdge(edges[i].destination, edges[i].source, edges[i].weight);
 		}
@@ -108,7 +108,7 @@ void InitGraph::readEdges(){
 	string line;
 
 	struct s_e e;
-	int tmp;
+	//int tmp;
 	int tw = 0;
 
 	while(getline(inFile, line))
@@ -134,7 +134,7 @@ void InitGraph::readEdges(){
 
 		double x1, x2, y1, y2;
 
-		for (int i = 0; i < vertices.size(); i++){//can be optimized
+		for (unsigned int i = 0; i < vertices.size(); i++){//can be optimized
 			if (vertices[i].id == e.source){
 				x1 = vertices[i].x;
 				y1 = vertices[i].y;
@@ -168,12 +168,12 @@ void InitGraph::displayGraph(){
 		gv->addNode(g.getVertexSet()[i]->getInfo(), this->vertices[i].x, this->vertices[i].y);
 	}
 	 */
-	for (int i = 0; i < this->vertices.size(); i++){
+	for (unsigned int i = 0; i < this->vertices.size(); i++){
 		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
 		gv->setVertexLabel(this->vertices[i].id, this->vertices[i].name);
 	}
 
-	for (int i = 0; i < this->edges.size(); i++){
+	for (unsigned int i = 0; i < this->edges.size(); i++){
 		if (this->edges[i].twoWay){
 			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
 		}
@@ -200,13 +200,13 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 		gv->addNode(g.getVertexSet()[i]->getInfo(), this->vertices[i].x, this->vertices[i].y);
 	}
 	 */
-	for (int i = 0; i < this->vertices.size(); i++){
+	for (unsigned int i = 0; i < this->vertices.size(); i++){
 		gv->addNode(this->vertices[i].id, this->vertices[i].x, this->vertices[i].y);
 		gv->setVertexLabel(this->vertices[i].id, this->vertices[i].name);
 	}
 
 
-	for (int i = 0; i < this->edges.size(); i++){
+	for (unsigned int i = 0; i < this->edges.size(); i++){
 		if (this->edges[i].twoWay){
 			gv->addEdge(this->edges[i].id, this->edges[i].source, this->edges[i].destination, EdgeType::UNDIRECTED);
 		}
@@ -220,14 +220,14 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 	gv->setVertexLabel(path[0], this->vertices[path[0]].name + " - Start");
 	gv->setVertexLabel(path[path.size()-1], this->vertices[path[path.size()-1]].name + " - Finish");
 
-	for (int i = 0; i < sights.size(); i++){
+	for (unsigned int i = 0; i < sights.size(); i++){
 		gv->setVertexColor(sights[i], "green");
 	}
 
-	for (int i = 0; i < path.size() - 1; i++){
-		for (int j = 0; j < this->edges.size(); j++){
-			if (this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1] ||
-					this->edges[j].destination == path[i] && this->edges[j].source == path[i + 1]){
+	for (unsigned int i = 0; i < path.size() - 1; i++){
+		for (unsigned int j = 0; j < this->edges.size(); j++){
+			if ((this->edges[j].source == path[i] && this->edges[j].destination == path[i + 1]) ||
+					(this->edges[j].destination == path[i] && this->edges[j].source == path[i + 1])){
 				gv->setEdgeColor(j, "red");
 				gv->setEdgeThickness(j, 3);
 			}

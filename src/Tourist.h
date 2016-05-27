@@ -31,7 +31,9 @@ public:
 
 vector<Tourist*> Tourist::tourists;
 
-Tourist::Tourist(){}
+Tourist::Tourist(){
+	this->id = -1;
+}
 
 Tourist::Tourist(int id){
 	this->id = id;
@@ -60,7 +62,7 @@ void Tourist::setSights(vector<int> s){
 
 bool Tourist::pushSight(int sightId){
 
-	for (int i = 0; i < this->sights.size(); i++){
+	for (unsigned int i = 0; i < this->sights.size(); i++){
 		if (this->sights[i] == sightId){
 			return false;				//<- didn't push sight, was already there
 		}
@@ -109,7 +111,7 @@ vector <Tourist> Tourist::readTourists(){
 		linestream >> id;
 		v.clear();
 
-		for(int i = 0; i < NR_OF_SIGHTS; i++){
+		for(unsigned int i = 0; i < NR_OF_SIGHTS; i++){
 			getline(linestream, data, ' ');
 			linestream >> sight;
 			v.push_back(sight);
@@ -126,7 +128,7 @@ vector <Tourist> Tourist::readTourists(){
 }
 
 void Tourist::printSights(){
-	for (int i = 0; i < this->sights.size(); i++){
+	for (unsigned int i = 0; i < this->sights.size(); i++){
 		cout << this->sights[i];
 		if (i != this->sights.size() -1){
 			cout << ",";

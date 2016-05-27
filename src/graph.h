@@ -79,7 +79,7 @@ double Graph<T>::pathBetween(const T & source, const T & dest, vector<T> & p) {
 	while (i != source) {
 		p.push_back(vs[i]->path->getInfo());
 
-		for (int j = 0; j < vs[i]->path->getAdj().size(); j++) {
+		for (unsigned int j = 0; j < vs[i]->path->getAdj().size(); j++) {
 			if (vs[i]->path->getAdj()[j].getDest()->getInfo()
 					== vs[i]->getInfo()) {
 				totalWeight += vs[i]->path->getAdj()[j].getWeight();
