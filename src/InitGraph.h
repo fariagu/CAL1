@@ -33,6 +33,8 @@ public:
 	void highlightRoute(vector<int> & p, vector<int> & sights);
 	vector <Tourist> FillTourists();
 
+	vector<s_v> getVertices();
+
 	Graph<int> graph;
 };
 
@@ -237,88 +239,9 @@ void InitGraph::highlightRoute(vector<int> &path, vector<int> & sights){
 	gv->rearrange();
 }
 
-
-
-//usa Tourist::readTourists();
-//acede com:
-/**
- * Tourist t = Tourist();
- * t.readTourists();
- * vector<Tourist> vt = t.tourists;
- */
-/*
-vector<Tourist> InitGraph::FillTourists() {
-	ifstream inFile;
-
-	//Ler o ficheiro nodes.txt
-	inFile.open("tourists.txt");
-
-	if (!inFile) {
-		cerr << "Unable to open nodes.txt";
-		exit(1);   // call system to stop
-	}
-
-	string line;
-
-	struct s_v v;
-
-	while(getline(inFile, line))
-	{
-		stringstream linestream(line);
-		string data;
-
-		linestream >> v.id;
-
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> v.x;
-		getline(linestream, data, ';');  // read up-to the first ; (discard ;).
-		linestream >> v.y;
-
-		vertices.push_back(v);
-
-
-	}
-
-	inFile.close();
+vector<s_v> InitGraph::getVertices(){
+	return this->vertices;
 }
- */
-/*
-ifstream inFile;
-vector<Tourist> tourists;
-vector<int> sights;
-string String;
 
-//Ler o ficheiro tourists.txt
-inFile.open("tourists.txt");
-
-if (!inFile) {
-	cerr << "Unable to open tourists.txt";
-	exit(1);   // call system to stop
-} else {
-	Tourist t = Tourist();
-	int sight1, sight2, sight3, sight4, sight5;
-
-	getline(inFile, String);
-	while (inFile) {
-		//int pos = String.find_last_of(";");
-		t.setId(atoi(String.substr(0, 1).c_str()));
-		sight1 = atoi(String.substr(2, 1).c_str());
-		sight2 = atoi(String.substr(4, 1).c_str());
-		sight3 = atoi(String.substr(6, 1).c_str());
-		sight4 = atoi(String.substr(8, 1).c_str());
-		sight5 = atoi(String.substr(10, 1).c_str());
-		sights.push_back(sight1);
-		sights.push_back(sight2);
-		sights.push_back(sight3);
-		sights.push_back(sight4);
-		sights.push_back(sight5);
-
-		t.setSights(sights);
-		tourists.push_back(t);
-		getline(inFile, String);
-	}
-}
-return tourists;
-}*/
 
 #endif /* MAP_H_ */

@@ -1,19 +1,19 @@
 0;50;50
 Aliados
 1;100;50
-Câmara do Porto
+Camara do Porto
 2;150;50
 Trindade
 3;220;40
-Clérigos
+Clerigos
 4;50;100
-Estação de São Bento
+Estacao de Sao Bento
 5;100;100
-Sé do Porto
+Se do Porto
 6;150;100
 Ponte de D.Luis
 7;230;110
-Palácio de Cristal
+Palacio de Cristal
 8;50;150
 Jardim de Serralves
 9;100;150
@@ -37,11 +37,11 @@ Cedofeita
 18;0;30
 Palcio da Bolsa
 19;10;65
-Casa da Música
+Casa da Musica
 20;20;350
 Coliseu
 21;80;270
-Teatro Sá da Bandeira
+Teatro Sa da Bandeira
 22;90;360
 Rivoli
 23;160;350
@@ -53,4 +53,4 @@ Serra do Pilar
 26;300;70
 Caves Vinho do Porto
 27;310;180
-Estação de Campanhã
+Estacao de Campanha

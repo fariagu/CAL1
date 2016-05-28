@@ -11,6 +11,7 @@ class Tourist {
 	int id;
 	string name;
 	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
+	int bus_id;
 public:
 	static vector<Tourist> tourists;
 	static int tourist_nr;
@@ -18,6 +19,7 @@ public:
 	Tourist();
 	Tourist(int id);
 	Tourist(int id, vector<int>s);
+	Tourist(int id, string n, vector<int>s);
 
 	int getId();
 	void setId(int id);
@@ -25,6 +27,8 @@ public:
 	void setName(string n);
 	vector<int> getSights();
 	void setSights(vector<int>s);
+	int getBusId();
+	void setBusId(int b_id);
 	bool pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
 	vector <Tourist> readTourists();
@@ -38,15 +42,25 @@ int Tourist::tourist_nr = 0;
 
 Tourist::Tourist(){
 	this->id = -1;
+	this->bus_id = -1;
 }
 
 Tourist::Tourist(int id){
 	this->id = id;
+	this->bus_id = -1;
 }
 
 Tourist::Tourist(int id, vector<int> s){
 	this->id = id;
 	this->sights = s;
+	this->bus_id = -1;
+}
+
+Tourist::Tourist(int id, string n, vector<int> s){
+	this->id = id;
+	this->name = n;
+	this->sights = s;
+	this->bus_id = -1;
 }
 
 int Tourist::getId(){
@@ -71,6 +85,14 @@ vector<int> Tourist::getSights(){
 
 void Tourist::setSights(vector<int> s){
 	this->sights = s;
+}
+
+int Tourist::getBusId(){
+	return this->bus_id;
+}
+
+void Tourist::setBusId(int b_id){
+	this->bus_id = b_id;
 }
 
 bool Tourist::pushSight(int sightId){
@@ -130,7 +152,7 @@ vector <Tourist> Tourist::readTourists(){
 			linestream >> sight;
 			v.push_back(sight);
 		}
-		Tourist t = Tourist(id,v);
+		Tourist t = Tourist(id,name,v);
 		//cout << v[0] << " " << v[1] << " " << v[2] << " " << v[3] << " " << v[4] << " ---" << id<< endl;
 		tourists.push_back(t);
 		count++;
@@ -168,5 +190,6 @@ int Tourist::CommonSights(Tourist &t2){
 
 	return counter;
 }
+
 
 #endif /* TOURIST_H_ */

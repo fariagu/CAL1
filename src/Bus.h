@@ -13,6 +13,7 @@ class Bus {
 	static int capacity;
 	vector<int> tourists;
 	vector<int> sights;
+	vector<int> path;
 public:
 	Bus();
 	Bus(int id);
@@ -28,11 +29,14 @@ public:
 	void setTourists(vector<int>t);
 	vector<int> getSights();
 	void setSights(vector<int> s);
+	vector<int> getPath();
+	void setPath(vector<int> p);
 	bool pushTourist(int touristId);
 	bool removeTourist(int touristId);
 	void pushSight(int sightId);		//sightId is the vertexId
 	bool removeSight(int sightId);
-	void calcRoute(vector<int> & finalPath);
+	void calcRoute(vector<int> & finalPath, InitGraph g);
+	bool checkInserted(vector <Bus> bv, int t_id);
 };
 
 int Bus::capacity = BUS_CAPACITY;
@@ -72,6 +76,14 @@ vector<int> Bus::getSights(){
 
 void Bus::setSights(vector<int> s){
 	this->sights = s;
+}
+
+vector<int> Bus::getPath(){
+	return this->path;
+}
+
+void Bus::setPath(vector<int> p){
+	this->path = p;
 }
 
 bool Bus::pushTourist(int touristId){
@@ -168,7 +180,7 @@ vector <Bus> Bus::FillBuses(vector <Tourist> tourists){
 	vector <Tourist> aux = tourists;
 	int nbuses = 0;
 	int max_buses = ceil((double)tourists.size() / (double)BUS_CAPACITY);
-	cout << "t.size: " << tourists.size() << "\nmax_buses: " << max_buses << endl;
+	//cout << "t.size: " << tourists.size() << "\nmax_buses: " << max_buses << endl;
 	//int size0 = 0;
 
 	while ((aux.size() > 0) && (nbuses < max_buses)){
@@ -210,32 +222,21 @@ vector <Bus> Bus::FillBuses(vector <Tourist> tourists){
 	return buses;
 }
 
-void Bus::calcRoute(vector<int> & finalPath){
-	//manually ------------------------------
-	/*	vector<Tourist> tourists;
-	tourists= FillTourists();
-	Tourist t = Tourist();
-	t.readSights();
-	Bus b = Bus(0);
-	vector<int> t_id;
-	t_id.push_back(0);		//manually pushing tourists to a bus
-	t_id.push_back(1);
-	b.setTourists(t_id);*/
-	//int arr[] = { 2, 5, 7, 9, 11, 20, 18};
-	Bus b = Bus(0);
-	Tourist t;
-	vector <Bus> v;
-	v = b.FillBuses(t.readTourists());
-	vector<int> s = v[0].getSights();
+void Bus::calcRoute(vector<int> & finalPath, InitGraph g){
+	//Bus b = Bus();
+	//Tourist t;
+	//vector <Bus> v;
+	//v = b.FillBuses(t.readTourists());
+	//vector<int> s = v[0].getSights();
 
-	for(size_t i = 0 ; i < v[0].getSights().size(); i++)
-		cout << v[0].getSights()[i];
+/*	for(size_t i = 0 ; i < v[0].getSights().size(); i++)
+		cout << v[0].getSights()[i];*/
 	//s(arr, arr + sizeof(arr) / sizeof(arr[0]));	//manualy pushing sights
 
 	//	b.setSights(s);
-	this->setSights(s);
+	//this->setSights(s);
 
-	InitGraph g = InitGraph();
+	//InitGraph g = InitGraph();
 	//g.displayGraph();
 
 	vector<int> tmpPath, tmpPartPath;
@@ -246,11 +247,11 @@ void Bus::calcRoute(vector<int> & finalPath){
 		tmpPath.clear();
 		int nextId = this->sights[i], maybeNextId = -1;
 
-		cout << endl << "starting on " << nextId << endl;			//debugging
+		//cout << endl << "starting on " << nextId << endl;			//debugging
 
 		//for (int j = 0; j < remainingSights.size(); j++){
 		while (nextId != -1) {
-			cout << "nextId: " << nextId << endl;			//debugging
+			//cout << "nextId: " << nextId << endl;			//debugging
 			int prevId = nextId;
 			tmpWeight = INT_INFINITY;
 			//tmpPath.clear();
@@ -263,18 +264,18 @@ void Bus::calcRoute(vector<int> & finalPath){
 				path.clear();
 				w = g.graph.pathBetween(nextId, remainingSights[k], path);
 
-				cout << "pathBetween " << nextId << " and "
-						<< remainingSights[k] << "--> " << w << endl;//debugging
+				//cout << "pathBetween " << nextId << " and "
+				//		<< remainingSights[k] << "--> " << w << endl;//debugging
 
 				if (w != 0 && w < tmpWeight) {
 					tmpPartPath = path;
 					tmpWeight = w;
 					maybeNextId = remainingSights[k];
 
-					for (unsigned int xx = 0; xx < path.size(); xx++) {		//debugging
+/*					for (unsigned int xx = 0; xx < path.size(); xx++) {		//debugging
 						cout << path[xx] << " ";
 					}
-					cout << " - weight: " << tmpWeight << endl;	//end debugging
+					cout << " - weight: " << tmpWeight << endl;	//end debugging*/
 				}
 			}
 			if (tmpWeight == INT_INFINITY) {
@@ -301,10 +302,10 @@ void Bus::calcRoute(vector<int> & finalPath){
 
 		}
 
-		for (unsigned int i = 0; i < tmpPath.size(); i++) {
+/*		for (unsigned int i = 0; i < tmpPath.size(); i++) {
 			cout << tmpPath[i] << " - ";
 		}
-		cout << endl << "candidate weight: " << weight << endl;
+		cout << endl << "candidate weight: " << weight << endl;*/
 
 		if (weight < finalWeight) {
 			//finalPath.clear();
@@ -315,7 +316,7 @@ void Bus::calcRoute(vector<int> & finalPath){
 		//tmpPath.clear();
 	}
 
-	cout << "....................\n";
+//	cout << "....................\n";
 
 	for (unsigned int i = 0; i < finalPath.size()-1; i++){
 		if (finalPath[i] == finalPath[i+1]){
@@ -323,13 +324,25 @@ void Bus::calcRoute(vector<int> & finalPath){
 		}
 	}
 
-	cout << "Result:" << endl;
+//	cout << "Result:" << endl;
 
-	for (unsigned int i = 0; i < finalPath.size(); i++) {
+/*	for (unsigned int i = 0; i < finalPath.size(); i++) {
 		cout << finalPath[i] << " - ";
 	}
-	cout << endl << "final weight = " << finalWeight << endl;
+	cout << endl << "final weight = " << finalWeight << endl;*/
 
+}
+
+bool Bus::checkInserted(vector <Bus> bv, int t_id){
+	for (unsigned int i = 0; i < bv.size(); i++){
+		for (unsigned int j = 0; j < bv[i].getTourists().size(); j++){
+			if (t_id == bv[i].getTourists()[j]){
+				//t.setId(bv[i].getId());
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 
