@@ -22,7 +22,7 @@ int main() {/*
 
 	vector<int> path;
 
-	Bus b = Bus(0);
+	Bus b = Bus();
 
 	b.calcRoute(path);
 
@@ -31,11 +31,33 @@ int main() {/*
 	g.highlightRoute(path, sights);
 
 	getchar();*/
-
+/*
 	int bus_nr = 0, bus_cap = 5, pass_nr = 23;
 	bus_nr = ceil((double)pass_nr / (double)bus_cap);
 
-	cout << bus_nr << endl;
+	cout << bus_nr << endl;*/
+/*
+	Tourist t = Tourist();
+	t.readTourists();
+
+	cout << t.tourist_nr << endl;*/
+
+	Bus b = Bus();
+	Tourist t = Tourist();
+	vector<Bus> bv;
+
+	bv = b.FillBuses(t.readTourists());
+
+	for (unsigned int i = 0; i < bv.size(); i++){
+		cout <<"bus[" << i << "]: ";
+		vector<int> vec = bv[i].getSights();
+		int size = vec.size();
+		for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
+			cout << bv[i].getSights()[j]<< " - ";
+		}
+		cout << endl;
+	}
+	cout << "qwerty\n";
 
 	return 0;
 }

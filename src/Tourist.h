@@ -9,9 +9,11 @@ const int NR_OF_SIGHTS = 5;
 
 class Tourist {
 	int id;
+	string name;
 	vector<int> sights;		//fixed size = 5(NR_OF_SIGHTS)
 public:
-	static vector<Tourist* > tourists;
+	static vector<Tourist> tourists;
+	static int tourist_nr;
 
 	Tourist();
 	Tourist(int id);
@@ -19,6 +21,8 @@ public:
 
 	int getId();
 	void setId(int id);
+	string getName();
+	void setName(string n);
 	vector<int> getSights();
 	void setSights(vector<int>s);
 	bool pushSight(int sightId);		//sightId is the vertexId
@@ -29,7 +33,8 @@ public:
 
 };
 
-vector<Tourist*> Tourist::tourists;
+vector<Tourist> Tourist::tourists;
+int Tourist::tourist_nr = 0;
 
 Tourist::Tourist(){
 	this->id = -1;
@@ -50,6 +55,14 @@ int Tourist::getId(){
 
 void Tourist::setId(int id){
 	this->id = id;
+}
+
+string Tourist::getName(){
+	return this->name;
+}
+
+void Tourist::setName(string n){
+	this->name = n;
 }
 
 vector<int> Tourist::getSights(){
@@ -88,6 +101,7 @@ bool Tourist::removeSight(int sightId){
 
 vector <Tourist> Tourist::readTourists(){
 	ifstream inFile;
+	int count = 0;
 
 	//Ler o ficheiro tourists.txt
 	inFile.open("tourists.txt");
@@ -97,7 +111,7 @@ vector <Tourist> Tourist::readTourists(){
 		exit(1);   // call system to stop
 	}
 
-	string line;
+	string line, name;
 
 	int id, sight;
 	vector<int> v;
@@ -108,7 +122,7 @@ vector <Tourist> Tourist::readTourists(){
 		stringstream linestream(line);
 		string data;
 
-		linestream >> id;
+		linestream >> id >> name;
 		v.clear();
 
 		for(unsigned int i = 0; i < NR_OF_SIGHTS; i++){
@@ -119,10 +133,12 @@ vector <Tourist> Tourist::readTourists(){
 		Tourist t = Tourist(id,v);
 		//cout << v[0] << " " << v[1] << " " << v[2] << " " << v[3] << " " << v[4] << " ---" << id<< endl;
 		tourists.push_back(t);
+		count++;
 
 	}
 
 	inFile.close();
+	this->tourist_nr = count;
 
 	return tourists;
 }

@@ -14,6 +14,7 @@ class Bus {
 	vector<int> tourists;
 	vector<int> sights;
 public:
+	Bus();
 	Bus(int id);
 	Bus(int id, vector<int>t);
 
@@ -21,6 +22,7 @@ public:
 	void setId(int id);
 	bool FindSight(int s);
 	void adicionaSights(Bus b, Tourist t);
+	vector<int> addVectors(vector<int>v1, vector<int> v2);
 	vector <Bus> FillBuses(vector <Tourist> tourists);
 	vector<int> getTourists();
 	void setTourists(vector<int>t);
@@ -34,6 +36,10 @@ public:
 };
 
 int Bus::capacity = BUS_CAPACITY;
+
+Bus::Bus(){
+	this->id = -1;
+}
 
 Bus::Bus(int id){
 	this->id = id;
@@ -96,23 +102,23 @@ bool Bus::removeTourist(int touristId){
 
 void Bus::pushSight(int sightId){
 
-	for (unsigned int i = 0; i < this->tourists.size(); i++){
-		if (this->tourists[i] == sightId){
+	for (unsigned int i = 0; i < this->sights.size(); i++){
+		if (this->sights[i] == sightId){
 			return;// false				//<- didn't push sight, was already there
 		}
 	}
 
-	this->tourists.push_back(sightId);
+	this->sights.push_back(sightId);
 	//return true;						//<- pushed sight successfully
 }
 
 bool Bus::removeSight(int sightId){
-	vector<int>::iterator it = this->tourists.begin();
-	vector<int>::iterator ite = this->tourists.end();
+	vector<int>::iterator it = this->sights.begin();
+	vector<int>::iterator ite = this->sights.end();
 
 	for (; it != ite; it++){
 		if ((*it) == sightId){
-			this->tourists.erase(it);
+			this->sights.erase(it);
 			return true;				//<- deleted sight successfully
 		}
 	}
@@ -133,59 +139,70 @@ bool Bus::FindSight(int s)
 
 }
 
-void Bus::adicionaSights(Bus b, Tourist t)
-{
-	for(size_t i = 0; i < b.getSights().size(); i++)
-	{
+void Bus::adicionaSights(Bus b, Tourist t){
+	vector<int> tmp = b.getSights();
+	vector<int> sights = t.getSights();
+	tmp.insert( tmp.end(), sights.begin(), sights.end() );
 
-		for(size_t k = 0; k < t.getSights().size(); k++)
-		{
-			if(b.getSights()[i] != t.getSights()[k])
-				this->sights.push_back(t.getSights()[k]);
-		}
+	sort( tmp.begin(), tmp.end() );
+	tmp.erase( unique( tmp.begin(), tmp.end() ), tmp.end() );
 
-	}
+	//int size = tmp.size();
+
+	b.setSights(tmp);
+}
+
+vector<int> Bus::addVectors(vector<int>v1, vector<int> v2){
+	v1.insert( v1.end(), v2.begin(), v2.end() );
+	sort( v1.begin(), v1.end() );
+	v1.erase( unique( v1.begin(), v1.end() ), v1.end() );
+
+	return v1;
 }
 
 
 vector <Bus> Bus::FillBuses(vector <Tourist> tourists){
 	vector <Bus> buses;
 	buses.clear();
-	//vector <int> t2;
+	vector <int> tmp, tmp2;
 	vector <Tourist> aux = tourists;
-	int nbuses = 1;
-	//int size = 0;
+	int nbuses = 0;
+	int max_buses = ceil((double)tourists.size() / (double)BUS_CAPACITY);
+	cout << "t.size: " << tourists.size() << "\nmax_buses: " << max_buses << endl;
+	//int size0 = 0;
 
-	while (aux.size() > 0){
+	while ((aux.size() > 0) && (nbuses < max_buses)){
 
 		//vector <Tourist> aux2 = aux;
 		Bus b = Bus(nbuses);
 		b.pushTourist(aux[0].getId());
 		//b.setSights(aux[0].getSights());
-		for (unsigned int i = 0; i < aux[0].getSights().size(); i++){
+		tmp = aux[0].getSights();
+		/*for (unsigned int i = 0; i < aux[0].getSights().size(); i++){
 			int s = (int)aux[0].getSights()[i];
 			b.pushSight(s);
-		}
+		}*/
 		//aux.erase(aux.begin());
-
-		for (unsigned int i = 1; i < aux.size(); i++){
-			if(aux[0].CommonSights(aux[i]) > 2 )
-			{
-				//size++;
+		int tourists_in_bus = 1;
+		for (unsigned int i = 1; (i < aux.size()) && (tourists_in_bus < BUS_CAPACITY); i++){
+			if(aux[0].CommonSights(aux[i]) > 2 ){
 				//b.adicionaSights(b, aux[i]);
-				for (unsigned int j = 0; j < aux[0].getSights().size(); j++){
-					int s = (int)aux[i].getSights()[j];
-					b.pushSight(s);
-				}
+				tmp2 = aux[i].getSights();
+				tmp = b.addVectors(tmp, tmp2);
+				tmp2.clear();
 				b.pushTourist(aux[i].getId());
+				tourists_in_bus++;
 				aux.erase(aux.begin() + i);
 				i--;
 			}
 		}
 
 		aux.erase(aux.begin());
-
+		b.setSights(tmp);
 		buses.push_back(b);
+		tmp.clear();
+
+		//int s = b.getSights().size();
 		nbuses++;
 	}
 
