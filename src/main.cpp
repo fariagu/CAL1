@@ -14,25 +14,39 @@
 #include "Tourist.h"
 #include "Bus.h"
 #include "InitGraph.h"
+#include "stringsearch.h"
 
 using namespace std;
 
+
 int listBuses(vector<Bus> bv, InitGraph g){
 	for (unsigned int i = 0; i < bv.size(); i++){
-		cout << "Bus[" << i << "]: ";
-		for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
-			cout << g.getVertices()[bv[i].getSights()[j]].name;
-			//cout << bv[i].getSights()[j];
-			if (j != bv[i].getSights().size()-1){
-				cout << " - ";
+		if (bv[i].getTourists().size() < BUS_CAPACITY){
+			cout << "Bus[" << i+1 << "]: ";
+			for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
+				cout << g.getVertices()[bv[i].getSights()[j]].name;
+				//cout << bv[i].getSights()[j];
+				if (j != bv[i].getSights().size()-1){
+					cout << " - ";
+				}
 			}
+			cout << endl;
 		}
-		cout << endl;
 	}
 
-	//wait for input on which bus
+	int input = -1;
+	cin >> input;
 
-	return 0;
+	if (input >= 0 && input <= (int)bv.size()){
+		if (input == 0){
+			return -1;
+		}
+		else if (bv[input-1].getTourists().size() < 5){
+			return input-1;
+		}
+	}
+
+	return -1;
 }
 
 int main() {
@@ -77,7 +91,7 @@ int main() {
 
 	while(rest.size() > 0){
 		cout << "Choose a passenger:\n";
-		int menu_choice = -1, curr_tourist;
+		int menu_choice = -1, curr_tourist = -1, curr_bus = -1;
 		bool chosen = false;
 
 		for (unsigned int i = 0; i < rest.size(); i++){
@@ -89,7 +103,7 @@ int main() {
 			cin >> menu_choice;
 
 			if ((menu_choice > 0) && (menu_choice <= (int)rest.size())){
-				curr_tourist = menu_choice-1;
+				curr_tourist = rest[menu_choice-1].getId();
 				chosen = true;
 			}
 			else if (menu_choice == 0){
@@ -111,8 +125,10 @@ int main() {
 
 			switch(menu_choice){
 			case 1:
-				listBuses(bv, g);
-				chosen = true;
+				curr_bus = listBuses(bv, g);
+				if (curr_bus != -1){
+					chosen = true;
+				}
 				break;
 			case 2:
 				//searchPOI();
@@ -128,6 +144,29 @@ int main() {
 				break;
 			}
 		}
+
+		bv[curr_bus].pushTourist(curr_tourist);
+		for (unsigned int i = 0; i < rest.size(); i++){
+			if (rest[i].getId() == curr_tourist){
+				rest.erase(rest.begin()+i);
+				curr_tourist = -1;
+				break;
+			}
+		}
+
+
+	}
+
+	cout << "All buses are now ocupied as follows:" << endl;
+	for (unsigned int i = 0; i < bv.size(); i++){
+		cout << "Bus[" << i+1 << "]-> ";
+		for (unsigned int j = 0; j < bv[i].getTourists().size(); j++){
+			cout << tv[bv[i].getTourists()[j]].getName();
+			if (j != bv[i].getTourists().size()-1){
+				cout << ", ";
+			}
+		}
+		cout << endl;
 	}
 
 	/*
