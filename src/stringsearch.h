@@ -31,7 +31,7 @@ void pre_kmp(string pattern, vector<int> & prefix){
 int kmp(string text, string pattern){
 	int num=0;
 	int m=pattern.length();
-	vector<int> prefix(m);
+	vector<int> prefix(m, 0);
 	pre_kmp(pattern, prefix);
 
 	int n=text.length();

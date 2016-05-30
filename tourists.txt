@@ -7,7 +7,7 @@
 6 Ana 12 15 21 25 26
 7 Maria 2 15 18 25 26
 8 Claudia 2 5 7 11 16
-9 Claudio 5 9 11 16 20
+9 Diogo 5 9 11 16 20
 10 Joana 12 15 21 25 26
 11 Filipe 2 15 18 25 26
 12 Paula 2 5 7 11 16

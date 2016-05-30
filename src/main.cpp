@@ -18,6 +18,46 @@
 
 using namespace std;
 
+int searchTourists(string name, vector <Tourist> tv){
+	string res = "NO MATCH";
+	int dist = INT_INFINITY, tmp_dist;
+
+	for (unsigned int i = 0; i < tv.size(); i++){
+		if (tv[i].getBusId() != -1){
+			tmp_dist = editDistance(name,tv[i].getName());
+
+			if (tmp_dist < dist){
+				dist = tmp_dist;
+				res = tv[i].getName();
+			}
+		}
+	}
+	if (res != "NO MATCH"){
+		for (unsigned int i = 0; i < tv.size(); i++){
+			if (tv[i].getName() == res){
+				return tv[i].getId();
+			}
+		}
+	}
+
+	return -1;
+}
+
+int searchSights(string name, vector <Bus> bv, InitGraph g){
+	int res = -1;
+	int dist = INT_INFINITY, tmp_dist;
+
+	for (unsigned int i = 0; i < g.getVertices().size(); i++){
+		tmp_dist = editDistance(name, g.getVertices()[i].name);
+
+		if (tmp_dist < dist){
+			dist = tmp_dist;
+			res = g.getVertices()[i].id;
+		}
+	}
+
+	return res;
+}
 
 int listBuses(vector<Bus> bv, InitGraph g){
 	for (unsigned int i = 0; i < bv.size(); i++){
@@ -25,13 +65,58 @@ int listBuses(vector<Bus> bv, InitGraph g){
 			cout << "Bus[" << i+1 << "]: ";
 			for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
 				cout << g.getVertices()[bv[i].getSights()[j]].name;
-				//cout << bv[i].getSights()[j];
 				if (j != bv[i].getSights().size()-1){
 					cout << " - ";
 				}
 			}
 			cout << endl;
 		}
+	}
+
+	int input = -1;
+	cin >> input;
+
+	if (input >= 0 && input <= (int)bv.size()){
+		if (input == 0){
+			return -1;
+		}
+		else if (bv[input-1].getTourists().size() < 5){
+			return input-1;
+		}
+	}
+
+	return -1;
+}
+
+bool exists(int index, vector<int>v){
+	for (unsigned int i = 0; i < v.size(); i++){
+		if (v[i] == index){
+			return true;
+		}
+	}
+	return false;
+}
+
+int listBusesBySight(int sight_id, vector<Bus> bv, InitGraph g){
+	int ctr = 0;
+	for (unsigned int i = 0; i < bv.size(); i++){
+		if (bv[i].getTourists().size() < BUS_CAPACITY){
+			if (exists(sight_id, bv[i].getSights())){
+				ctr++;
+				cout << "Bus[" << i+1 << "]: ";
+				for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
+					cout << g.getVertices()[bv[i].getSights()[j]].name;
+					if (j != bv[i].getSights().size()-1){
+						cout << " - ";
+					}
+				}
+				cout << endl;
+			}
+		}
+	}
+
+	if (ctr == 0){
+		return -2;
 	}
 
 	int input = -1;
@@ -71,7 +156,7 @@ int main() {
 			rest.push_back(tv[i]);
 		}
 		else {
-			tv[i].setId(bv[i].getId());
+			tv[i].setBusId(bv[i].getId());
 		}
 	}
 
@@ -83,16 +168,12 @@ int main() {
 	system("pause");
 	cout << string( 10, '\n' );//clear screen
 
-	/*	for (int i = 0; i < rest.size(); i++){
-		cout << rest[i].getName() << ", ";
-	}
-	cout << endl;*/
-
 
 	while(rest.size() > 0){
 		cout << "Choose a passenger:\n";
-		int menu_choice = -1, curr_tourist = -1, curr_bus = -1;
+		int menu_choice = -1, curr_tourist = -1, curr_bus = -1, sight_id, tour_id;
 		bool chosen = false;
+		string name;
 
 		for (unsigned int i = 0; i < rest.size(); i++){
 			cout << setw(10) << left << rest[i].getName() << " - (" << (i+1) << ")\n";
@@ -111,15 +192,17 @@ int main() {
 			}
 		}
 
-		cout << "Choose from a list of routes        (1);\n";
-		cout << "Search for a specific POI           (2);\n";
-		cout << "Search for another passenger's name (3);\n";
-		cout << "Quit                                (0);\n";
-
 		menu_choice = -1;
 		chosen = false;
 
 		while (!chosen){
+			cout << "Choose from a list of routes        (1);\n";
+			cout << "Search for a specific POI           (2);\n";
+			cout << "Search for another passenger's name (3);\n";
+			cout << "Quit                                (0);\n";
+
+			menu_choice = -1;
+			chosen = false;
 
 			cin >> menu_choice;
 
@@ -131,12 +214,60 @@ int main() {
 				}
 				break;
 			case 2:
-				//searchPOI();
-				chosen = true;
+				cout << "Point of Interest: ";
+				cin >> name;
+
+				sight_id = searchSights(name, bv, g);
+
+				if (sight_id != -1){
+					cout << "These are the options for " << g.getVertices()[sight_id].name << ":" << endl;
+
+					curr_bus = listBusesBySight(sight_id, bv, g);
+
+					if (curr_bus == -2){
+						cout << "There are no buses going through " << g.getVertices()[sight_id].name << endl << endl;
+						break;
+					}
+
+					if (curr_bus != -1){
+						chosen = true;
+						break;
+					}
+				}
 				break;
 			case 3:
-				//searchTourist();
-				chosen = true;
+				cout << "Name of Passenger: ";
+				cin >> name;
+
+				tour_id = searchTourists(name, tv);
+
+				if (tour_id != -1){
+					if (b.checkInserted(bv, tour_id)){
+						for (unsigned int i = 0; i < bv.size(); i++){
+							for (unsigned int j = 0; j < bv[i].getTourists().size(); j++){
+								if (bv[i].getTourists()[j] == tour_id){
+									if (bv[i].getTourists().size() != 5){
+										cout << "User inserted into bus[" << i+1 << "]" << endl;
+										curr_bus = i;
+										chosen = true;
+									}
+									else {
+										cout << tv[tour_id].getName() << "'s bus is full" << endl;
+									}
+									break;
+								}
+							}
+						}
+					}
+					else {
+						cout << tv[tour_id].getName() << " not inserted in any Bus" << endl;
+					}
+
+					if (curr_bus != -1){
+						chosen = true;
+						break;
+					}
+				}
 				break;
 			case 0:
 				return 0;
