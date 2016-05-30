@@ -215,7 +215,8 @@ int main() {
 				break;
 			case 2:
 				cout << "Point of Interest: ";
-				cin >> name;
+				cin.ignore();
+				getline(cin, name);
 
 				sight_id = searchSights(name, bv, g);
 
@@ -237,7 +238,8 @@ int main() {
 				break;
 			case 3:
 				cout << "Name of Passenger: ";
-				cin >> name;
+				cin.ignore();
+				getline(cin, name);
 
 				tour_id = searchTourists(name, tv);
 
@@ -299,49 +301,12 @@ int main() {
 		}
 		cout << endl;
 	}
-
-	/*
-	InitGraph g = InitGraph();
-	g.displayGraph();
-
-	vector<int> path;
-
-	Bus b = Bus();
-
-	b.calcRoute(path);
-
-	vector<int> sights = b.getSights();
-
-	g.highlightRoute(path, sights);
-
-	getchar();*/
-	/*
-	int bus_nr = 0, bus_cap = 5, pass_nr = 23;
-	bus_nr = ceil((double)pass_nr / (double)bus_cap);
-
-	cout << bus_nr << endl;*/
-	/*
-	Tourist t = Tourist();
-	t.readTourists();
-
-	cout << t.tourist_nr << endl;*/
-	/*
-	Bus b = Bus();
-	Tourist t = Tourist();
-	vector<Bus> bv;
-
-	bv = b.FillBuses(t.readTourists());
-
+/*					//for some reason doesn't work on my computer
 	for (unsigned int i = 0; i < bv.size(); i++){
-		cout <<"bus[" << i << "]: ";
-		vector<int> vec = bv[i].getSights();
-		int size = vec.size();
-		for (unsigned int j = 0; j < bv[i].getSights().size(); j++){
-			cout << bv[i].getSights()[j]<< " - ";
-		}
-		cout << endl;
+		vector<int> p = bv[i].getPath(), s = bv[i].getSights();
+		g.highlightRoute(p, s);
+		system("pause");
 	}
-	cout << "qwerty\n";*/
-
+*/
 	return 0;
 }
